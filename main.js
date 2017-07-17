@@ -7,15 +7,17 @@ var ASSETS = {
     }
 };
 //定数宣言
+var SCREEN_WIDTH = 1200;
+var SCREEN_HEIGHT = 900;
 var GRAVITY = 1;
-var GROUND_FACE = 900;
+var GROUND_FACE = 850;
 var CEILING = 10;
 
 // MainScene クラスを定義
 phina.define('MainScene', {
     superClass: 'CanvasScene',
-    init: function() {
-        this.superInit();
+    init: function(options) {
+        this.superInit(options);
         // 背景色を指定
         this.backgroundColor = 'skyblue';
 
@@ -60,7 +62,9 @@ phina.main(function() {
     // アプリケーション生成
     var app = GameApp({
         startLabel: 'main', // メインシーンから開始する
-        assets: ASSETS
+        assets: ASSETS,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
     });
     // アプリケーション実行
     app.run();
