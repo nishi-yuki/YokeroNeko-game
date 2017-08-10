@@ -31,7 +31,7 @@ phina.define('MainScene', {
             fill: 'gray',
         }, neko).addChildTo(this);
 
-        // 画面タッチ時処理 
+        // 画面タッチ時処理
         this.onpointend = function() {
             neko.jump();
         };
@@ -58,6 +58,7 @@ phina.define('Neko', {
         else if (this.top < CEILING) {
             if (this.physical.velocity.y < 0) {
                 this.physical.velocity.y = 0;
+                this.top = CEILING;
             }
         }
     },
