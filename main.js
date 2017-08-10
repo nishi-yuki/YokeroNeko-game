@@ -3,7 +3,7 @@ phina.globalize();
 //ASSETS
 var ASSETS = {
     image: {
-        'neko': 'pic/neko.png'
+        'neko': 'pic/nekoall.png'
     }
 };
 //定数宣言
@@ -13,28 +13,39 @@ var GRAVITY = 1;
 var GROUND_FACE = 850;
 var CEILING = 10;
 var JUMP_POWER = -20;
+var NUMBER_OF_MARU = 3;
+//参照用
+var MAIN;
 
 // MainScene クラスを定義
 phina.define('MainScene', {
     superClass: 'DisplayScene',
+    timer: 0,
     init: function(options) {
         this.superInit(options);
+        //参照を渡す
+        MAIN = this;
         // 背景色を指定
         this.backgroundColor = 'skyblue';
         //nekoを生成
-        var neko = Neko().addChildTo(this);
-        neko.x = this.gridX.center();
-        neko.y = this.gridY.center();
+        this.neko = Neko().addChildTo(this);
+        this.neko.x = this.gridX.center();
+        this.neko.y = this.gridY.center();
 
         //maruを追加
-        var maru = Maru({
-            fill: 'gray',
-        }, neko).addChildTo(this);
-
-        // 画面タッチ時処理
-        this.onpointend = function() {
-            neko.jump();
-        };
+        for (i = 0; i < NUMBER_OF_MARU; i++) {
+            var maru = Maru({
+                fill: 'gray',
+            }, this.neko).addChildTo(this);
+            maru.x = SCREEN_WIDTH * 2 + (SCREEN_WIDTH / 3) * i;
+            maru.y = Math.randint(CEILING, GROUND_FACE);
+        }
+    },
+    onpointend: function() {
+        this.neko.jump();
+    },
+    update: function() {
+        this.timer++
     },
 });
 //nekoクラス
@@ -53,7 +64,7 @@ phina.define('Neko', {
         //床で跳ねる
         if (this.bottom > GROUND_FACE) {
             this.bottom = GROUND_FACE - 5;
-            this.physical.velocity.y = this.physical.velocity.y * -0.5;
+            this.physical.velocity.y = this.physical.velocity.y * -1;
         } //天井に当たる
         else if (this.top < CEILING) {
             if (this.physical.velocity.y < 0) {
@@ -73,26 +84,35 @@ phina.define('Maru', {
     },
     update: function() {
         if (this.right < 0) {
-            this.fill = 'yellow'
             this.left = SCREEN_WIDTH;
             this.y = Math.randint(CEILING, GROUND_FACE);
-            this.hit_already = false;
         }
-        if (this.hitTestElement(this.enemy) && this.hit_already == false) {
-            this.hit_already = true;
-            this.fill = 'green';
+        if (this.hitTestElement(this.enemy)) {
+            MAIN.exit();
         }
     },
-    hit_already: false,
 });
+//結果表示Scene
+phina.define('ResultScene', {
+    superClass: 'phina.game.ResultScene',
+    init: function() {
+        this.superInit({
+            score: ((MAIN.timer / 30) | 0) + '秒よけ続けた',
+            width: SCREEN_WIDTH,
+            height: SCREEN_HEIGHT,
+        });
+    },
+});
+
 // メイン処理
 phina.main(function() {
     // アプリケーション生成
     var app = GameApp({
-        startLabel: 'main', // メインシーンから開始する
+        startLabel: 'title', // メインシーンから開始する
         assets: ASSETS,
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT,
+        title: 'よけろねこ',
     });
     // アプリケーション実行
     app.run();
