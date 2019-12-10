@@ -14,7 +14,7 @@ var GROUND_FACE = 850;
 var CEILING = 10;
 var JUMP_POWER = -20;
 var NUMBER_OF_MARU = 3;
-var YOKERONEKO_HASHTAG = '#YokeroNeko';
+var YOKERONEKO_HASHTAG = 'YokeroNeko';
 //参照用
 var MAIN;
 
@@ -109,10 +109,10 @@ phina.define('ResultScene', {
         });
 
         this.shareButton.onclick = function () {
-            var text = '{0}\n{1} {2}'.format(score_msg, YOKERONEKO_HASHTAG, "is phina.js project.");
+            var text = '{0}\n{1} {2}'.format(score_msg, message);
             var url = phina.social.Twitter.createURL({
                 text: text,
-                hashtags: params.hashtags,
+                hashtags: params.hashtags + ',' + YOKERONEKO_HASHTAG,
                 url: params.url,
             });
             window.open(url, 'share window', 'width=480, height=320');
