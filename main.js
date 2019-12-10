@@ -14,7 +14,6 @@ var GROUND_FACE = 850;
 var CEILING = 10;
 var JUMP_POWER = -20;
 var NUMBER_OF_MARU = 3;
-var YOKERONEKO_HASHTAG = '#YokeroNeko';
 //参照用
 var MAIN;
 
@@ -96,27 +95,12 @@ phina.define('Maru', {
 //結果表示Scene
 phina.define('ResultScene', {
     superClass: 'phina.game.ResultScene',
-    init: function(params) {
-        params = ({}).$safe(params, phina.game.ResultScene.defaults);
-
-        var score_msg = ((MAIN.timer / 30) | 0) + '秒よけ続けた';
-        var message = params.message.format(params);
-
+    init: function() {
         this.superInit({
-            score: score_msg,
+            score: ((MAIN.timer / 30) | 0) + '秒よけ続けた',
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT,
         });
-
-        this.shareButton.onclick = function () {
-            var text = '{0}\n{1} {2}'.format(score_msg, YOKERONEKO_HASHTAG, "is phina.js project.");
-            var url = phina.social.Twitter.createURL({
-                text: text,
-                hashtags: params.hashtags,
-                url: params.url,
-            });
-            window.open(url, 'share window', 'width=480, height=320');
-        };
     },
 });
 
