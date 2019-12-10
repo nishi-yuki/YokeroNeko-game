@@ -14,6 +14,7 @@ var GROUND_FACE = 850;
 var CEILING = 10;
 var JUMP_POWER = -20;
 var NUMBER_OF_MARU = 3;
+var YOKERONEKO_HASHTAG = 'YokeroNeko';
 //参照用
 var MAIN;
 
@@ -95,11 +96,13 @@ phina.define('Maru', {
 //結果表示Scene
 phina.define('ResultScene', {
     superClass: 'phina.game.ResultScene',
-    init: function() {
+    init: function(params) {
+        params = ({}).$safe(params, phina.game.ResultScene.defaults);
         this.superInit({
             score: ((MAIN.timer / 30) | 0) + '秒よけ続けた',
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT,
+            hashtags: params.hashtags + ',' + YOKERONEKO_HASHTAG
         });
     },
 });
